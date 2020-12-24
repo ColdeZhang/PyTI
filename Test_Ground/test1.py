@@ -91,7 +91,7 @@ def instance_page():
     #将顶部边线与左右边线合并
     page = ""
     page = page + top_botton_line
-    for i in range(int(height)-2):
+    for i in range(height-2):
         page = page + unused_line
     page = page + top_botton_line
 
@@ -99,3 +99,7 @@ def instance_page():
 
 os.system('clear')
 sys.stdout.write ("{0}".format(instance_page()))
+
+
+
+
