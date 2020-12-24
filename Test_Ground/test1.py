@@ -97,8 +97,9 @@ def instance_page():
 
     return page
 
-os.system('clear')
-sys.stdout.write ("{0}".format(instance_page()))
+while True:
+    os.system('clear')
+    sys.stdout.write ("{0}".format(instance_page()))
 
 
 
