@@ -2,6 +2,7 @@ import sys
 import os
 import time
 import keyboard
+import threading
 
 
 def refresh_page_test1():
@@ -99,16 +100,68 @@ def instance_page():
     return page
 
 def keyboard_detect():
-    '[BUG]键盘侦测测试'
+    '[可用]键盘侦测测试'
     if keyboard.is_pressed("left"):
-        print ("left is pressed")
         time.sleep(0.2)
+        return "left"
+    elif keyboard.is_pressed("right"):
+        time.sleep(0.2)
+        return "right"
+    elif keyboard.is_pressed("left"):
+        time.sleep(0.2)
+        return "enter"
+    else:
+        return "null"
 
 
-        
-    
+
+
+def btn(btn_name, state):
+    if state == 0:
+        btn = ">" + btn_name + "<"
+        btn = "\33[0m" + btn + "\33[0m"
+        return btn
+    elif state == 1:
+        btn = ">" + btn_name + "<"
+        btn = "\33[7m" + btn + "\33[0m"  
+        return btn      
+
+
+# os.system('clear')
+# sys.stdout.write("\33[7m>CONFIRM<\33[0m")
+# sys.stdout.flush()
+
+# t = threading.Thread(target=keyboard_detect)  
+# t.start()
+# t.join()
+os.system('clear')
+page = "\t\t\t" + btn("CONFERM", 0) + "\t" + btn("CANCEL", 1) + "\n\n\n\n\n\n\n\n\n\n"
+page_current = page
+sys.stdout.write(page_current)
+sys.stdout.flush()
+btn_id = 1
 while True:
-    keyboard_detect()
+    if keyboard_detect() == "left":
+        if btn_id < 1:
+            btn_id = 1
+        else:
+            btn_id = btn_id - 1
+    if keyboard_detect() == "right":
+        if btn_id > 0:
+            btn_id = 0
+        else:
+            btn_id = btn_id + 1
+
+    if btn_id == 1:
+        page = "\t\t\t" + btn("CONFERM", 0) + "\t" + btn("CANCEL", 1) + "\n\n\n\n\n\n\n\n\n\n"
+    elif btn_id == 0:
+        page = "\t\t\t" + btn("CONFERM", 1) + "\t" + btn("CANCEL", 0) + "\n\n\n\n\n\n\n\n\n\n"
+    
+    if page != page_current:
+        page_current = page 
+        os.system('clear')     
+        sys.stdout.write(page)
+        sys.stdout.flush()
 
 # os.system('clear')
 # sys.stdout.write ("{0}".format(instance_page()))
