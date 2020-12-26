@@ -1,8 +1,9 @@
-import sys
 import os
-import time
-import keyboard
+import sys
 import threading
+import time
+
+import keyboard
 
 
 def refresh_page_test1():
@@ -111,6 +112,7 @@ def keyboard_detect():
         time.sleep(0.2)
         return "enter"
     else:
+        time.sleep(0.1)
         return "null"
 
 
@@ -126,41 +128,63 @@ def btn(btn_name, state):
         btn = "\33[7m" + btn + "\33[0m"  
         return btn      
 
+def input_scan():
+    while True:
+        if keyboard_detect() == "left":
+            if consts.btn_id == 1:
+                consts.btn_id = 0
+            else:
+                consts.btn_id = 1
+        if keyboard_detect() == "right":
+            if consts.btn_id == 0:
+                consts.btn_id = 1
+            else:
+                consts.btn_id = 0
+
+def page_fresh():
+    '页面更新'
+    while True:
+        if consts.btn_id == 1:
+            consts.page = "\t\t\t" + btn("CONFERM", 0) + "\t" + btn("CANCEL", 1) + "\n\n\n\n\n\n\n\n\n\n"
+        elif consts.btn_id == 0:
+            consts.page = "\t\t\t" + btn("CONFERM", 1) + "\t" + btn("CANCEL", 0) + "\n\n\n\n\n\n\n\n\n\n"
 
 # os.system('clear')
 # sys.stdout.write("\33[7m>CONFIRM<\33[0m")
 # sys.stdout.flush()
 
+class consts():
+    '存储共有变量'
+    btn_id = 0
+    page = ""
+
 # t = threading.Thread(target=keyboard_detect)  
 # t.start()
 # t.join()
 os.system('clear')
-page = "\t\t\t" + btn("CONFERM", 0) + "\t" + btn("CANCEL", 1) + "\n\n\n\n\n\n\n\n\n\n"
-page_current = page
+consts.page = "\t\t\t" + btn("CONFERM", 0) + "\t" + btn("CANCEL", 1) + "\n\n\n\n\n\n\n\n\n\n"
+page_current = consts.page
 sys.stdout.write(page_current)
 sys.stdout.flush()
-btn_id = 1
-while True:
-    if keyboard_detect() == "left":
-        if btn_id < 1:
-            btn_id = 1
-        else:
-            btn_id = btn_id - 1
-    if keyboard_detect() == "right":
-        if btn_id > 0:
-            btn_id = 0
-        else:
-            btn_id = btn_id + 1
 
-    if btn_id == 1:
-        page = "\t\t\t" + btn("CONFERM", 0) + "\t" + btn("CANCEL", 1) + "\n\n\n\n\n\n\n\n\n\n"
-    elif btn_id == 0:
-        page = "\t\t\t" + btn("CONFERM", 1) + "\t" + btn("CANCEL", 0) + "\n\n\n\n\n\n\n\n\n\n"
-    
-    if page != page_current:
-        page_current = page 
+
+threads = []
+
+t = threading.Thread(target=input_scan)
+threads.append(t)
+t = threading.Thread(target=page_fresh)
+threads.append(t)
+for t in threads:
+    t.start()
+
+for t in threads:
+    t.join()
+
+while True:  
+    if consts.page != page_current:
+        page_current = consts.page 
         os.system('clear')     
-        sys.stdout.write(page)
+        sys.stdout.write(consts.page)
         sys.stdout.flush()
 
 # os.system('clear')
