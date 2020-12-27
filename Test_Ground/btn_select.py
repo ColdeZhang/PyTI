@@ -8,15 +8,15 @@ def keyboard_detect():
     '[可用]键盘侦测测试'
     if keyboard.is_pressed("left"):
         time.sleep(0.05)
-        print ("left is pressed")
+        #print ("left is pressed")
         return "left"
     elif keyboard.is_pressed("right"):
         time.sleep(0.05)
-        print ("right is pressed")
+        #print ("right is pressed")
         return "right"
     elif keyboard.is_pressed("enter"):
         time.sleep(0.05)
-        print ("enter is pressed")
+        #print ("enter is pressed")
         return "enter"
 
 
